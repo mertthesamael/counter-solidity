@@ -1,6 +1,6 @@
 import './App.css';
 import { Flex, Text } from '@chakra-ui/layout';
-import abi from "./artifacts/contracts/Lock.sol/Counter.json"
+import abi from "./utils/abi.json"
 import { ethers } from "ethers";
 import { useEffect, useState } from 'react';
 import { Button, ChakraProvider } from '@chakra-ui/react';
