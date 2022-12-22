@@ -103,7 +103,7 @@ useEffect(() => {
   return (
     <ChakraProvider>
     <Flex gap='2rem' justifyContent='center' flexDir='column' alignItems='center' h='100vh' w='100%' backgroundImage='linear-gradient( 94.3deg,  rgba(26,33,64,1) 10.9%, rgba(81,84,115,1) 87.1% )'>
-      {<Spinner color='#FFBF00' thickness='8px' h='6rem' w='6rem'></Spinner>}
+      {loading&&<Spinner color='#FFBF00' thickness='8px' h='6rem' w='6rem'></Spinner>}
       <Text color='white' textAlign='center' fontSize='15rem'>{number}</Text>
       <Text color='white' textAlign='center' fontSize='2rem'>You need to be on the Mumbai-Testnet to interact with the contract</Text>
       <Flex gap='2rem'>
