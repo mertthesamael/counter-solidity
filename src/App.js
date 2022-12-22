@@ -4,18 +4,22 @@ import abi from "./utils/abi.json"
 import { ethers } from "ethers";
 import { useEffect, useState } from 'react';
 import { Button, ChakraProvider } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react'
 function App() {
-  async function requestAcc() {
-    await window.ethereum.request({method: 'eth_requestAccounts'})
-  }
+  const toast = useToast()
   const [number, setNumber] = useState()
+  const [logged,setLogged] = useState(false)
   const provider = new ethers.providers.Web3Provider(window.ethereum)
   const signer = provider.getSigner();
   const contract = new ethers.Contract("0x7DA2c7cbfA69347bAb8bD403DD313aB174E695F9", abi.abi, signer)
+  
   const fetchCa =  async() => {
-    const num = await contract.num()
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const contract2 = new ethers.Contract("0x7DA2c7cbfA69347bAb8bD403DD313aB174E695F9", abi.abi, provider)
+
+    const num = await contract2.num()
     console.log(num.toNumber())
-    setNumber(num.toNumber())
+    return  setNumber(num.toNumber())
     
   }
   const checkEvents = async () => {
@@ -25,7 +29,6 @@ function App() {
         console.log('TEST')
     })
 }
-  console.log()
 
   const inc = async () => {
     try{
@@ -36,6 +39,12 @@ function App() {
       
     }catch(err){
       console.log(err)
+      toast({
+        title: `You need to login with MetaMask wallet`,
+        status: 'error',
+        isClosable: true,
+      })
+
     }
   }
   const dec = async () => {
@@ -47,10 +56,25 @@ function App() {
       
     }catch(err){
       console.log(err)
+      toast({
+        title: `You need to login with MetaMask wallet`,
+        status: 'error',
+        isClosable: true,
+      })
     }
   }
+  const login = async () => {
+    try{
+
+      await window.ethereum.request({method: 'eth_requestAccounts'})
+      setLogged(true)
+    }catch(err){
+      setLogged(false)
+    }
+    
+  }
 useEffect(() => {
-  requestAcc()
+  
   fetchCa()
 },[])
   return (
@@ -62,6 +86,7 @@ useEffect(() => {
       <Button p='2rem' onClick={inc} color='white' colorScheme='green'>Increase</Button>
       <Button p='2rem' onClick={dec} color='white' colorScheme='red'>Decrease</Button>
       </Flex>
+      {logged==false&&<Button onClick={login}>Login</Button>}
     </Flex>
     </ChakraProvider>
   );
