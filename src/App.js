@@ -9,29 +9,34 @@ function App() {
   const toast = useToast()
   const [number, setNumber] = useState()
   const [logged,setLogged] = useState(false)
-  const provider = new ethers.providers.Web3Provider(window.ethereum)
-  const signer = provider.getSigner();
-  const contract = new ethers.Contract("0x7DA2c7cbfA69347bAb8bD403DD313aB174E695F9", abi.abi, signer)
-  
+
+  //Function for fetching smart contract
   const fetchCa =  async() => {
   const provider = new ethers.providers.Web3Provider(window.ethereum)
   const contract2 = new ethers.Contract("0x7DA2c7cbfA69347bAb8bD403DD313aB174E695F9", abi.abi, provider)
 
     const num = await contract2.num()
-    console.log(num.toNumber())
+    
     return  setNumber(num.toNumber())
     
   }
-  const checkEvents = async () => {
 
+  //Function for checkig events status on smart contract
+  const checkEvents = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const contract = new ethers.Contract("0x7DA2c7cbfA69347bAb8bD403DD313aB174E695F9", abi.abi, provider)
     contract.on("Change", (num) => {
         setNumber(num.toNumber())
-        console.log('TEST')
+      
     })
 }
 
+  //Increasing the value on blockchain
   const inc = async () => {
     try{
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract("0x7DA2c7cbfA69347bAb8bD403DD313aB174E695F9", abi.abi, signer)
       await contract.increase().then(res=> console.log(res.value.toNumber()))
       const num = await contract.num()
       await setNumber(num.toNumber())
@@ -47,8 +52,14 @@ function App() {
 
     }
   }
+
+  //Decreasing the value on blockchain
+
   const dec = async () => {
     try{
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract("0x7DA2c7cbfA69347bAb8bD403DD313aB174E695F9", abi.abi, signer)   
       await contract.decrease().then(res=> console.log(res.value.toNumber()))
       const num = await contract.num()
       await setNumber(num.toNumber())
@@ -63,6 +74,8 @@ function App() {
       })
     }
   }
+
+  //Metamask connect function
   const login = async () => {
     try{
 
@@ -70,6 +83,11 @@ function App() {
       setLogged(true)
     }catch(err){
       setLogged(false)
+      toast({
+        title: `There is no injected wallet in your browser :/`,
+        status: 'error',
+        isClosable: true,
+      })
     }
     
   }
