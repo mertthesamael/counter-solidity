@@ -83,9 +83,24 @@ function App() {
   //Metamask connect function
   const login = async () => {
     try{
-
+     await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [{
+            chainId: "0x13881",
+            rpcUrls: ["https://rpc-mumbai.maticvigil.com"],
+            chainName: "Mumbai Testnet",
+            nativeCurrency: {
+                name: "MATIC",
+                symbol: "MATIC",
+                decimals: 18
+            },
+            blockExplorerUrls: ["https://polygonscan.com/"]
+        }]
+    });
       await window.ethereum.request({method: 'eth_requestAccounts'})
       setLogged(true)
+  fetchCa()
+
     }catch(err){
       setLogged(false)
       toast({
